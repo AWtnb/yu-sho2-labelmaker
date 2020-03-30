@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!-- thanks https://qiita.com/okoppe8/items/f3b3e7688c98537512ea -->
+<html lang="ja">
+<meta charset="utf-8"/>
+<head>
+    <title>print page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css">
+    <link rel="stylesheet" type="text/css" href="./css/print.css">
+</head>
+<body class="A4">
+    <section class="sheet" id="topSheet">
+        <table class="print">
+            <tbody>
+                <tr>
+                    <td>
+                        <p class="zipcode">123-4567</p>
+                        <div class="addressBlock">
+                            <p class="address">春山県夏田区秋山字冬島1234 シーズンビルヂング1012号室</p>
+                            <p class="place">春夏大学 秋冬学部 十干十二支学科</p>
+                            <div class="nameBlock">
+                                <p class="name">四季 折助<span class="title">先生</span></p>
+                            </div>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+<script>
+window.onload = function(){
+    const sourceTable = window.opener.document.getElementById('table1');
+    const data = [];
+    for (let r = 1; r < sourceTable.rows.length; r++) {
+        let row = sourceTable.rows[r];
+        data.push({
+            name:    (row.cells[1].innerText || ""),
+            title:   (row.cells[2].innerText || ""),
+            place:   (row.cells[3].innerText || ""),
+            zipcode: (row.cells[4].innerText || ""),
+            address: (row.cells[5].innerText || ""),
+        });
+    }
+    // add ptrint sheet if needed
+    let nSheet = Math.ceil(data.length / 12);
+    if (nSheet > 1) {
+        const topSheet = document.getElementById("topSheet");
+        for (let n = 0; n < nSheet - 1; n++) {
+            let wrapper = document.createElement("section");
+            wrapper.innerHTML = topSheet.outerHTML;
+            document.body.appendChild(wrapper);
+        }
+    }
+    // markup data as html with html template.
+    const markup = data.map(d => {
+        return `<p class="zipcode">${d.zipcode}</p>` +
+            `<div class="addressBlock">` +
+                `<p class="address">${d.address.replace(/\s+/g, "<br>")}</p>` +
+                `<p class="place">${d.place}</p>` +
+                `<div class="nameBlock">` +
+                    `<p class="name">${d.name}<span class="title">${d.title}</span></p>` +
+                `</div>` +
+            `</div>`;
+    });
+    // overwrite inner html of each td.
+    let labelIndex = 0;
+    const printTable = document.getElementsByClassName("print");
+    for (let i = 0; i < printTable.length; i++) {
+        const targetTable = printTable[i];
+        const cells = targetTable.getElementsByTagName("td");
+        for (let c = 0; c < cells.length; c++) {
+            cells[c].innerHTML = markup[labelIndex];
+            labelIndex += 1;
+            if (labelIndex == markup.length) {
+                labelIndex = 0;
+            }
+        }
+    }
+}
+</script>
+</body>
+</html>

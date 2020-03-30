@@ -1,0 +1,46 @@
+
+table.print {
+    position: absolute;
+    top: 23.5mm;
+    left: 7mm;
+    width: 198mm;
+    height: 267mm;
+    border-collapse: collapse;
+}
+
+table.print p {
+    margin: 0;
+}
+
+table.print td {
+    border: 1px dotted;
+    border-color: #ffffff;
+    border-collapse: collapse;
+    position: relative;
+}
+
+table.print p.zipcode {
+    position: absolute;
+    font-size: 14pt;
+    top: 5mm;
+    left: 5mm;
+}
+
+table.print .addressBlock {
+    position: absolute;
+    max-width: 92mm;
+    font-size: 13pt;
+    top: 12mm;
+    left: 5mm;
+}
+
+table.print .addressBlock .nameBlock .name {
+    font-size: 18pt;
+    margin-left: 2mm;
+    margin-top: 2mm;
+}
+
+table.print .addressBlock .nameBlock .title {
+    font-size: 14pt;
+    margin-left: .5em;
+}

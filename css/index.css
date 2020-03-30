@@ -1,0 +1,45 @@
+
+p, img, form, table {
+    margin-left: 1em;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 10pt;
+    counter-reset: rowCount;
+}
+table td,th {
+    min-width: 5em;
+    height: 1.25em;
+    border: solid 1px black;
+}
+tr:hover {
+    background-color: yellow;
+}
+th {
+    background-color: #333333;
+    color: #eeeeee;
+}
+table td {
+    color: #999999;
+}
+table > tbody > tr {
+    counter-increment: rowCount;
+}
+
+table > tbody > tr > td:first-child::before{
+    content: counter(rowCount);
+}
+
+img {
+    border: 1px solid #888888;
+    border-radius: 6px;
+}
+
+input {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 1em;
+}
+
