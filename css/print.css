@@ -26,6 +26,10 @@ table.print p.zipcode {
     left: 5mm;
 }
 
+table.print p.zipcode::before {
+    content: "〒";
+}
+
 table.print .addressBlock {
     position: absolute;
     max-width: 92mm;
