@@ -21,19 +21,19 @@ table.print td {
 
 table.print p.zipcode {
     position: absolute;
-    font-size: 14pt;
+    font-size: 11pt;
     top: 5mm;
     left: 5mm;
 }
 
 table.print p.zipcode::before {
-    content: "〒";
+    content: "\3012";
 }
 
 table.print .addressBlock {
     position: absolute;
     max-width: 92mm;
-    font-size: 13pt;
+    font-size: 12pt;
     top: 12mm;
     left: 5mm;
 }
