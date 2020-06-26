@@ -12,7 +12,7 @@
     <li><strong>注：Internet Explorer 非対応！</strong></li>
     <li>紙に無駄が出ないように、余りが出た場合はリストの先頭からラベルを埋め直します。</li>
     <li>セル内で改行されている場合には正常に動作しません。</li>
-    <li>「住所」に全角／半角スペースを入れると改行に変換されます。</li>
+    <li>改行タグ（<code>&lt;br&gt;</code>）を使用できます。</li>
 </ul>
 <img src="https://i.gyazo.com/a9ffe5416a69a5d90252cb09362e424c.png">
 <p>下記ボックスに Excel から図のようにコピー＆ペーストしてください。</p>
@@ -25,7 +25,6 @@
 <table id="table1">
     <thead>
         <tr>
-            <th></th>
             <th>氏名</th>
             <th>敬称</th>
             <th>所属</th>
@@ -35,7 +34,6 @@
     </thead>
     <tbody>
         <tr>
-            <td></td>
             <td>福澤 諭吉</td>
             <td>先生</td>
             <td>慶應義塾大学</td>
@@ -43,7 +41,6 @@
             <td>東京都港区三田2-15-45</td>
         </tr>
         <tr>
-            <td></td>
             <td>夏目 漱石</td>
             <td>先生</td>
             <td></td>
@@ -51,7 +48,6 @@
             <td>東京都文京区向丘2-20-7</td>
         </tr>
         <tr>
-            <td></td>
             <td>樋口 一葉</td>
             <td>先生</td>
             <td></td>
@@ -89,10 +85,9 @@ function import2table(lines, tableObj) {
         .filter(line => line.match(/./))
         .forEach((line, r) => {
             const row = tableObj.insertRow(-1);
-            row.insertCell(0).innerText = r + 1;
             const labelElement = line.split(/\t/g);
             for (let i = 0; i < 5; i++) {
-                const currentCell = row.insertCell(i + 1);
+                const currentCell = row.insertCell(i);
                 let text = labelElement[i].trim();
                 text = text.replace(/^(\d{3})([^\d])?(\d{4})$/, "$1-$3");
                 currentCell.innerText = zen2han(text.trim());

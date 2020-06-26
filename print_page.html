@@ -54,11 +54,11 @@ window.onload = function(){
     for (let r = 1; r < sourceTable.rows.length; r++) {
         let row = sourceTable.rows[r];
         data.push({
-            name:    (row.cells[1].innerText || ""),
-            title:   (row.cells[2].innerText || ""),
-            place:   (row.cells[3].innerText || ""),
-            zipcode: (row.cells[4].innerText || ""),
-            address: (row.cells[5].innerText || ""),
+            name:    (row.cells[0].innerText || ""),
+            title:   (row.cells[1].innerText || ""),
+            place:   (row.cells[2].innerText || ""),
+            zipcode: (row.cells[3].innerText || ""),
+            address: (row.cells[4].innerText || ""),
         });
     }
     // add print sheet if needed
@@ -75,7 +75,7 @@ window.onload = function(){
     const markup = data.map(d => {
         return `<p class="zipcode">${d.zipcode}</p>` +
             `<div class="addressBlock">` +
-                `<p class="address">${d.address.replace(/\s+/g, "<br>")}</p>` +
+                `<p class="address">${d.address}</p>` +
                 `<p class="place">${d.place}</p>` +
                 `<div class="nameBlock">` +
                     `<p class="name">${d.name}<span class="title">${d.title}</span></p>` +

@@ -39,18 +39,10 @@ table td {
 table > tbody > tr {
     counter-increment: rowCount;
 }
-table > tbody > tr > td:first-child::before{
-    content: counter(rowCount);
-}
 table tr:hover {
     background-color: #7FB2B3;
 }
-table tr td:nth-child(1)  {
-    color: #f2275d;
-    font-style: italic;
-    padding-left: .25em;
-    padding-right: .5em;
-}
+
 img {
     border: 2px solid #FF8B85;
     border-radius: 6px;
@@ -67,4 +59,8 @@ textarea {
     border-radius: 6px;
     padding: .5em;
     border: 2px solid #FF8B85;
+}
+
+code {
+    background: #fff;
 }
