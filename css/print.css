@@ -21,7 +21,7 @@ table.print td {
 
 table.print p.zipcode {
     position: absolute;
-    font-size: 11pt;
+    font-size: 12pt;
     top: 5mm;
     left: 5mm;
 }
