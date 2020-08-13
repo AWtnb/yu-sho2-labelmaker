@@ -64,7 +64,7 @@ window.onload = function(){
     const sourceTable = window.opener.document.getElementById('table1');
     const data = [];
     for (let r = 1; r < sourceTable.rows.length; r++) {
-        let row = sourceTable.rows[r];
+        const row = sourceTable.rows[r];
         data.push({
             name:    (row.cells[0].innerText || ""),
             title:   (row.cells[1].innerText || ""),
@@ -74,11 +74,11 @@ window.onload = function(){
         });
     }
     // add print sheet if needed
-    let nSheet = Math.ceil(data.length / 12);
+    const nSheet = Math.ceil(data.length / 12);
     if (nSheet > 1) {
         const topSheet = document.getElementById("topSheet");
         for (let n = 0; n < nSheet - 1; n++) {
-            let wrapper = document.createElement("section");
+            const wrapper = document.createElement("section");
             wrapper.innerHTML = topSheet.outerHTML;
             document.body.appendChild(wrapper);
         }

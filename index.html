@@ -82,7 +82,7 @@ function zen2han(str) {
 function import2table(lines, tableObj) {
     resetTable(tableObj);
     lines.split(/[\r\n]+/g)
-        .filter(line => line.match(/./))
+        .filter(line => line)
         .forEach((line, r) => {
             const row = tableObj.insertRow(-1);
             const labelElement = line.split(/\t/g);
