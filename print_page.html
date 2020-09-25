@@ -87,8 +87,8 @@ window.onload = function(){
     const markup = data.map(d => {
         return `<p class="zipcode">${d.zipcode}</p>` +
             `<div class="addressBlock">` +
-                `<p class="address">${d.address}</p>` +
-                `<p class="place">${d.place}</p>` +
+                `<p class="address">${(d.address).replace(/[\r?\n]/g, "<br>")}</p>` +
+                `<p class="place">${(d.place).replace(/[\r?\n]/g, "<br>")}</p>` +
                 `<div class="nameBlock">` +
                     `<p class="name">${d.name}<span class="title">${d.title}</span></p>` +
                 `</div>` +
