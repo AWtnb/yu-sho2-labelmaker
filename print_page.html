@@ -104,6 +104,8 @@ window.onload = function(){
             cells[c].innerHTML = markup[labelIndex];
             labelIndex += 1;
             if (labelIndex == markup.length) {
+                cells[c].style.borderBottomColor = "#ccc";
+                cells[c].style.borderRightColor = "#ccc";
                 labelIndex = 0;
             }
         }
