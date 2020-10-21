@@ -85,14 +85,18 @@ window.onload = function(){
     }
     // markup data as html with html template.
     const markup = data.map(d => {
-        return `<p class="zipcode">${d.zipcode}</p>` +
-            `<div class="addressBlock">` +
-                `<p class="address">${(d.address).replace(/[\r?\n]/g, "<br>")}</p>` +
-                `<p class="place">${(d.place).replace(/[\r?\n]/g, "<br>")}</p>` +
-                `<div class="nameBlock">` +
-                    `<p class="name">${d.name}<span class="title">${d.title}</span></p>` +
-                `</div>` +
-            `</div>`;
+        const tdMarkup = `<p class="zipcode">〒${d.zipcode}</p>
+            <div class="addressBlock">
+                <p class="address">${(d.address).replace(/[\r?\n]/g, "<br>")}</p>
+                <p class="place">${(d.place).replace(/[\r?\n]/g, "<br>")}</p>
+                <div class="nameBlock">
+                    <p class="name">${d.name}<span class="title">${d.title}</span></p>
+                </div>
+            </div>`;
+        if (!d.name && !d.title && !d.place && !d.zipcode && !d.address) {
+            return "";
+        }
+        return tdMarkup;
     });
     // overwrite inner html of each td.
     let labelIndex = 0;
@@ -102,6 +106,7 @@ window.onload = function(){
         const cells = targetTable.getElementsByTagName("td");
         for (let c = 0; c < cells.length; c++) {
             cells[c].innerHTML = markup[labelIndex];
+            console.log(markup[labelIndex]);
             labelIndex += 1;
             if (labelIndex == markup.length) {
                 cells[c].style.borderBottomColor = "#ccc";
