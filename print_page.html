@@ -48,6 +48,7 @@
         </table>
     </section>
 <script>
+
 String.prototype.bytes = function () {
     let length = 0;
     for (let i = 0; i < this.length; i++) {
@@ -60,61 +61,75 @@ String.prototype.bytes = function () {
     }
     return length;
 };
-window.onload = function(){
-    const sourceTable = window.opener.document.getElementById('table1');
-    const data = [];
-    for (let r = 1; r < sourceTable.rows.length; r++) {
-        const row = sourceTable.rows[r];
-        data.push({
-            name:    (row.cells[0].innerText || ""),
+
+const SOURCE_TABLE = window.opener.document.querySelector('#table1');
+
+function loadBaseData(){
+    return Array.from(SOURCE_TABLE.rows).slice(1).map(row => {
+        return {
+            name:    (row.cells[0].innerText.replace(/[\r?\n]/g, "<br>") || ""),
             title:   (row.cells[1].innerText || ""),
-            place:   (row.cells[2].innerText || ""),
+            place:   (row.cells[2].innerText.replace(/[\r?\n]/g, "<br>") || ""),
             zipcode: (row.cells[3].innerText || ""),
-            address: (row.cells[4].innerText || ""),
-        });
-    }
-    // add print sheet if needed
+            address: (row.cells[4].innerText.replace(/[\r?\n]/g, "<br>") || ""),
+        }
+    });
+}
+
+function addSection(data) {
     const nSheet = Math.ceil(data.length / 12);
     if (nSheet > 1) {
-        const topSheet = document.getElementById("topSheet");
+        const topSheet = document.querySelector("#topSheet");
         for (let n = 0; n < nSheet - 1; n++) {
             const wrapper = document.createElement("section");
             wrapper.innerHTML = topSheet.outerHTML;
             document.body.appendChild(wrapper);
         }
     }
-    // markup data as html with html template.
-    const markup = data.map(d => {
-        const tdMarkup = `<p class="zipcode">〒${d.zipcode}</p>
-            <div class="addressBlock">
-                <p class="address">${(d.address).replace(/[\r?\n]/g, "<br>")}</p>
-                <p class="place">${(d.place).replace(/[\r?\n]/g, "<br>")}</p>
-                <div class="nameBlock">
-                    <p class="name">${d.name}<span class="title">${d.title}</span></p>
-                </div>
-            </div>`;
-        if (!d.name && !d.title && !d.place && !d.zipcode && !d.address) {
-            return "";
-        }
-        return tdMarkup;
+}
+
+function getLabelMarkup(data) {
+    return data.map(d => {
+        return "" +
+        `<p class="zipcode">〒${d.zipcode}</p>
+        <div class="addressBlock">
+            <p class="address">${d.address}</p>
+            <p class="place">${d.place}</p>
+            <div class="nameBlock">
+                <p class="name">${d.name}<span class="title">${d.title}</span></p>
+            </div>
+        </div>`;
     });
-    // overwrite inner html of each td.
-    let labelIndex = 0;
+}
+
+function updateTable(markup) {
+    let labelIdx = 0;
     const printTable = document.getElementsByClassName("print");
     for (let i = 0; i < printTable.length; i++) {
         const targetTable = printTable[i];
         const cells = targetTable.getElementsByTagName("td");
         for (let c = 0; c < cells.length; c++) {
-            cells[c].innerHTML = markup[labelIndex];
-            console.log(markup[labelIndex]);
-            labelIndex += 1;
-            if (labelIndex == markup.length) {
+            cells[c].innerHTML = markup[labelIdx];
+            // console.log(markup[labelIdx]);
+            labelIdx += 1;
+            if (labelIdx == markup.length) {
                 cells[c].style.borderBottomColor = "#ccc";
                 cells[c].style.borderRightColor = "#ccc";
-                labelIndex = 0;
+                labelIdx = 0;
             }
         }
     }
+}
+
+window.onload = function(){
+    const data = loadBaseData();
+
+    addSection(data);
+
+    const markup = getLabelMarkup(data);
+
+    updateTable(markup);
+
 }
 </script>
 </body>
