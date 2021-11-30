@@ -104,11 +104,7 @@ function fromLine(row, s) {
     }
     fields.forEach((s, i) => {
         const cell = row.insertCell(i);
-        let t = s.trim();
-        if (i == 3) {
-            t = formatPostalCode(t);
-        }
-        cell.innerText = toHalfWidth(t);
+        cell.innerText = (i == 3)? formatPostalCode(s.trim()) : toHalfWidth(s.trim());
         cell.style.color = "#343434"
     })
 }
