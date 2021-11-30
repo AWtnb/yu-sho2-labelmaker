@@ -59,6 +59,7 @@ textarea {
     border-radius: 6px;
     padding: .5em;
     border: 2px solid #FF8B85;
+    white-space: pre;
 }
 
 code {
