@@ -13,16 +13,7 @@
         <table class="print"  contenteditable="true">
             <tbody>
                 <tr>
-                    <td>
-                        <p class="zipcode">123-4567</p>
-                        <div class="addressBlock">
-                            <p class="address">□□□□□□□□□□□□□□□□□□</p>
-                            <p class="place">□□□□□□□□□□□□□□□□□□</p>
-                            <div class="nameBlock">
-                                <p class="name">□□□□□□□<span class="title">先生</span></p>
-                            </div>
-                        </div>
-                    </td>
+                    <td></td>
                     <td></td>
                 </tr>
                 <tr>
@@ -50,29 +41,26 @@
     </section>
 <script>
 
-String.prototype.bytes = function () {
-    let length = 0;
-    for (let i = 0; i < this.length; i++) {
-        const c = this.charCodeAt(i);
-        if ((c >= 0x0 && c < 0x81) || (c === 0xf8f0) || (c >= 0xff61 && c < 0xffa0) || (c >= 0xf8f1 && c < 0xf8f4)) {
-            length += 1;
-        } else {
-            length += 2;
-        }
-    }
-    return length;
-};
 
-const SOURCE_TABLE = window.opener.document.querySelector('#table1');
+const SOURCE_TABLE = window.opener.document.querySelector('#table1 tbody');
+
+function toMultiline(s) {
+    return (s.length < 1)? "" : s.replace(/[\r?\n]/g, "<br>");
+}
+
+function toPhoneNumber(s) {
+    return (s.length < 1)? "" : "Tel: " + s;
+}
 
 function loadBaseData(){
-    return Array.from(SOURCE_TABLE.rows).slice(1).map(row => {
+    return Array.from(SOURCE_TABLE.rows).map(row => {
         return {
-            name:    (row.cells[0].innerText.replace(/[\r?\n]/g, "<br>") || ""),
-            title:   (row.cells[1].innerText || ""),
-            place:   (row.cells[2].innerText.replace(/[\r?\n]/g, "<br>") || ""),
-            zipcode: (row.cells[3].innerText || ""),
-            address: (row.cells[4].innerText.replace(/[\r?\n]/g, "<br>") || ""),
+            name:      (toMultiline(row.cells[0].innerText.trim()) || ""),
+            honorific: (row.cells[1].innerText.trim() || ""),
+            place:     (toMultiline(row.cells[2].innerText.trim()) || ""),
+            zipcode:   (row.cells[3].innerText.trim() || ""),
+            address:   (toMultiline(row.cells[4].innerText.trim()) || ""),
+            phone:     (toPhoneNumber(row.cells[5].innerText.trim()) || ""),
         }
     });
 }
@@ -91,15 +79,17 @@ function addSection(data) {
 
 function getLabelMarkup(data) {
     return data.map(d => {
-        return "" +
-        `<p class="zipcode">〒${d.zipcode}</p>
-        <div class="addressBlock">
-            <p class="address">${d.address}</p>
-            <p class="place">${d.place}</p>
-            <div class="nameBlock">
-                <p class="name">${d.name}<span class="title">${d.title}</span></p>
-            </div>
-        </div>`;
+        return `<p class="zipcode">〒${d.zipcode}</p>` +
+        `<div class="container">` +
+            `<div class="addressBlock">` +
+                `<p class="address">${d.address}</p>` +
+                `<p class="place">${d.place}</p>` +
+                `<p class="phone">${d.phone}</p>` +
+            `</div>` +
+            `<div class="nameBlock">` +
+                `<p class="name">${d.name}<span class="honorific">${d.honorific}</span></p>` +
+            `</div>` +
+        `</div>`;
     });
 }
 
@@ -111,7 +101,6 @@ function updateTable(markup) {
         const cells = targetTable.getElementsByTagName("td");
         for (let c = 0; c < cells.length; c++) {
             cells[c].innerHTML = markup[labelIdx];
-            // console.log(markup[labelIdx]);
             labelIdx += 1;
             if (labelIdx == markup.length) {
                 cells[c].style.borderBottomColor = "#ccc";

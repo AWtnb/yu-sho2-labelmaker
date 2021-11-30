@@ -56,7 +56,7 @@
             <td></td>
             <td>113-0033</td>
             <td>東京都文京区本郷4-32・31</td>
-            <td>777-7777-7777</td>
+            <td></td>
         </tr>
     </tbody>
 </table>
@@ -102,9 +102,9 @@ function fromLine(row, s) {
     else if (fields.length > 6) {
         fields = fields.slice(0, 6);
     }
-    fields.forEach((s, i) => {
+    fields.map(s => s.trim()).forEach((s, i) => {
         const cell = row.insertCell(i);
-        cell.innerText = (i == 3)? formatPostalCode(s.trim()) : toHalfWidth(s.trim());
+        cell.innerText = (i == 3)? formatPostalCode(s) : toHalfWidth(s);
         cell.style.color = "#343434"
     })
 }

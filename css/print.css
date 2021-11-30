@@ -27,28 +27,46 @@ table.print td {
     position: relative;
 }
 
-table.print p.zipcode {
+p.zipcode {
     position: absolute;
     font-size: 14pt;
     top: 5mm;
     left: 5mm;
 }
 
-table.print .addressBlock {
+.container {
     position: absolute;
-    max-width: 92mm;
+    width: 90mm;
+    height: 30mm;
     font-size: 12pt;
     top: 12mm;
     left: 5mm;
 }
 
-table.print .addressBlock .nameBlock .name {
-    font-size: 18pt;
-    margin-left: 2mm;
-    margin-top: 2mm;
+.addressBlock {
+    line-height: 1.25;
 }
 
-table.print .addressBlock .nameBlock .title {
+.place:empty {
+    display: none;
+}
+
+.phone {
+    font-size: 9pt;
+}
+
+.nameBlock {
+    position: absolute;
+    bottom: 2mm;
+    left: 0;
+}
+
+.nameBlock .name {
+    font-size: 18pt;
+    line-height: 1.1;
+}
+
+.nameBlock .honorific {
     font-size: 14pt;
     margin-left: .5em;
 }
