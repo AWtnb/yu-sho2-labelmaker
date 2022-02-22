@@ -6,6 +6,11 @@
     src: local('Noto Sans Japanese Regular'), local('NotoSansJapanese-Regular'), url(https://fonts.gstatic.com/s/notosansjp/v27/-F62fjtqLzI2JPCgQBnw7HFowA.otf) format('opentype');
 }
 
+.sheet {
+    /* https://stackoverflow.com/questions/13605179/firefox-print-top-alignment-is-not-good-in-2nd-page */
+    margin-top: 1px;
+}
+
 table.print {
     font-family: "Noto Sans JP";
     position: absolute;
