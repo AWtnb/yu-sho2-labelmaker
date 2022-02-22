@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- thanks https://qiita.com/okoppe8/items/f3b3e7688c98537512ea -->
+<!-- thanks https://qiita.com/okoppe8/items/f3b3outere7688c98537512ea -->
 <html lang="ja">
 <head>
     <meta charset="utf-8"/>
@@ -71,7 +71,8 @@ function addSection(data) {
         const topSheet = document.querySelector("#topSheet");
         for (let n = 0; n < nSheet - 1; n++) {
             const wrapper = document.createElement("section");
-            wrapper.innerHTML = topSheet.outerHTML;
+            wrapper.innerHTML = topSheet.innerHTML;
+            wrapper.classList.add("sheet")
             document.body.appendChild(wrapper);
         }
     }

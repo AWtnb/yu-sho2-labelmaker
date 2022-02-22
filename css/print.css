@@ -27,7 +27,7 @@ table.print td {
     border-collapse: collapse;
     position: relative;
     width: 98mm;
-    height: 44.5mm;
+    height: 44mm;
 }
 
 p.zipcode {
@@ -40,7 +40,7 @@ p.zipcode {
 .container {
     position: absolute;
     width: 90mm;
-    height: 30mm;
+    height: 25mm;
     font-size: 12pt;
     top: 12mm;
     left: 5mm;
