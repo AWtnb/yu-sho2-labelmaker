@@ -11,9 +11,10 @@ table.print {
     position: absolute;
     top: 23.5mm;
     left: 7mm;
-    width: 198mm;
-    height: 267mm;
+    width: 196mm;
+    height: 266mm;
     border-collapse: collapse;
+    display: block;
 }
 
 table.print p {
@@ -25,6 +26,8 @@ table.print td {
     border-color: #ffffff;
     border-collapse: collapse;
     position: relative;
+    width: 98mm;
+    height: 44.5mm;
 }
 
 p.zipcode {
@@ -41,6 +44,7 @@ p.zipcode {
     font-size: 12pt;
     top: 12mm;
     left: 5mm;
+    word-break:break-all;
 }
 
 .addressBlock {
