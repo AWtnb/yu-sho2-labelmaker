@@ -56,7 +56,7 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.2.37/dist/vue.global.js"></script>
 
 <script>
 
@@ -110,12 +110,13 @@ function parseLine(line) {
 }
 
 
-const vm = new Vue({
-    el: "#app",
-    data: {
-        content: "",
-        color: "gray",
-        addressArr: sample,
+const vm = Vue.createApp({
+    data: function () {
+        return {
+            content: "",
+            color: "gray",
+            addressArr: sample,
+        }
     },
     computed: {
         contentLines: function() {
@@ -138,7 +139,7 @@ const vm = new Vue({
             window.open('./print_page.html', 'newwindow', 'width=800,height=890');
         }
     }
-});
+}).mount("#app");
 
 </script>
 </body>
