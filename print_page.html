@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- thanks https://qiita.com/okoppe8/items/f3b3outere7688c98537512ea -->
 <html lang="ja">
 <head>
     <meta charset="utf-8"/>
@@ -10,32 +9,21 @@
 </head>
 <body class="A4">
     <div id="app">
-        <div v-for="(sht, idx) in sheetsData" :key="idx">
-            <label-sheet :rows="sht"></label-sheet>
-        </div>
+        <sheets :sheets-arr="sheetsData"></sheets>
     </div>
 <script src="https://cdn.jsdelivr.net/npm/vue@3.2.37/dist/vue.global.js"></script>
 <script>
-
-function toMultiline(s) {
-    return (s.length < 1)? "" : s.replace(/[\r?\n]/g, "<br>");
-}
-
-function toPhoneNumber(s) {
-    return (s.length < 1)? "" : "Tel: " + s;
-}
-
 
 function loadBaseData(){
     const src = window.opener.document.querySelector('#table1 tbody');
     return Array.from(src.rows).map(row => {
         return {
-            name:      (toMultiline(row.cells[0].innerText.trim()) || ""),
+            name:      (row.cells[0].innerText.trim() || ""),
             honorific: (row.cells[1].innerText.trim() || ""),
-            place:     (toMultiline(row.cells[2].innerText.trim()) || ""),
+            place:     (row.cells[2].innerText.trim() || ""),
             zipcode:   (row.cells[3].innerText.trim() || ""),
-            address:   (toMultiline(row.cells[4].innerText.trim()) || ""),
-            phone:     (toPhoneNumber(row.cells[5].innerText.trim()) || ""),
+            address:   (row.cells[4].innerText.trim() || ""),
+            phone:     (row.cells[5].innerText.trim() || ""),
         }
     });
 }
@@ -71,7 +59,7 @@ class Allocator {
             const label = this.filled[i];
             cellStack.push(label)
             if (cellStack.length == this.nCol || i == this.filled.length - 1) {
-                trs.push(cellStack);
+                trs.push({cells: cellStack});
                 cellStack = [];
             }
         }
@@ -81,7 +69,7 @@ class Allocator {
             const tr = trs[i];
             rowStack.push(tr)
             if (rowStack.length == this.nRow || i == trs.length - 1) {
-                sheets.push(rowStack);
+                sheets.push({rows: rowStack});
                 rowStack = [];
             }
         }
@@ -97,7 +85,7 @@ const labelCell = {
         <div class="addressBlock">
             <p class="address">{{label.address}}</p>
             <p class="place">{{label.place}}</p>
-            <p class="phone">{{label.phone}}</p>
+            <p class="phone" v-if="label.phone.length">Tel: {{label.phone}}</p>
         </div>
         <div class="nameBlock">
             <p class="name">{{label.name}}<span class="honorific">{{label.honorific}}</span></p>
@@ -107,14 +95,14 @@ const labelCell = {
 }
 
 const labelRow = {
-    props: ["labels"],
+    props: ["cells"],
     components: {
         "label-cell": labelCell
     },
     template: `
     <tr>
-        <td v-for="(lb, idx) in labels" :key="idx" :class="lb.className">
-            <label-cell :label="lb.inner"></label-cell>
+        <td v-for="(cell, idx) in cells" :key="idx" :class="cell.className">
+            <label-cell :label="cell.inner"></label-cell>
         </td>
     </tr>
     `
@@ -129,11 +117,22 @@ const labelSheet = {
     <section class="sheet">
         <table class="print">
             <tbody contenteditable="true">
-                <label-row v-for="(r, idx) in rows" :key="idx" :labels="r">
-                </label-row>
+                <label-row v-for="(r, idx) in rows" :key="idx" :cells="r.cells"></label-row>
             </tbody>
         </table>
     </section>
+    `
+}
+
+const sheets = {
+    props: ["sheets-arr"],
+    components: {
+        "label-sheet": labelSheet
+    },
+    template: `
+    <div v-for="(sht, idx) in sheetsArr" :key="idx">
+        <label-sheet :rows="sht.rows"></label-sheet>
+    </div>
     `
 }
 
@@ -150,7 +149,7 @@ const vm = Vue.createApp({
         }
     },
     components: {
-        "label-sheet": labelSheet
+        "sheets": sheets
     }
 }).mount("#app");
 

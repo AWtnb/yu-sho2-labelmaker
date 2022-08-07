@@ -33,6 +33,7 @@ table.print td {
     position: relative;
     width: 98mm;
     height: 44mm;
+    white-space: pre-wrap;
 }
 
 p.zipcode {
