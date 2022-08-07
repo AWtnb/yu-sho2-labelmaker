@@ -28,8 +28,7 @@ table.print p {
 }
 
 table.print td {
-    border: 1px dotted;
-    border-color: #ffffff;
+    border: none;
     border-collapse: collapse;
     position: relative;
     width: 98mm;
@@ -79,4 +78,9 @@ p.zipcode {
 .nameBlock .honorific {
     font-size: 14pt;
     margin-left: .5em;
+}
+
+.mark {
+    border-bottom: 1px gray dotted !important;
+    border-right: 1px gray dotted !important;
 }
