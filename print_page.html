@@ -9,40 +9,13 @@
     <link rel="stylesheet" type="text/css" href="./css/print.css">
 </head>
 <body class="A4">
-    <section class="sheet" id="topSheet">
-        <table class="print">
-            <tbody contenteditable="true">
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+    <div id="app">
+        <div v-for="(sht, idx) in sheetsData" :key="idx">
+            <label-sheet :rows="sht"></label-sheet>
+        </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.2.37/dist/vue.global.js"></script>
 <script>
-
-
-const SOURCE_TABLE = window.opener.document.querySelector('#table1 tbody');
 
 function toMultiline(s) {
     return (s.length < 1)? "" : s.replace(/[\r?\n]/g, "<br>");
@@ -52,8 +25,10 @@ function toPhoneNumber(s) {
     return (s.length < 1)? "" : "Tel: " + s;
 }
 
+
 function loadBaseData(){
-    return Array.from(SOURCE_TABLE.rows).map(row => {
+    const src = window.opener.document.querySelector('#table1 tbody');
+    return Array.from(src.rows).map(row => {
         return {
             name:      (toMultiline(row.cells[0].innerText.trim()) || ""),
             honorific: (row.cells[1].innerText.trim() || ""),
@@ -65,63 +40,121 @@ function loadBaseData(){
     });
 }
 
-function addSection(data) {
-    const nSheet = Math.ceil(data.length / 12);
-    if (nSheet > 1) {
-        const topSheet = document.querySelector("#topSheet");
-        for (let n = 0; n < nSheet - 1; n++) {
-            const wrapper = document.createElement("section");
-            wrapper.innerHTML = topSheet.innerHTML;
-            wrapper.classList.add("sheet")
-            document.body.appendChild(wrapper);
+class Allocator {
+    constructor(basedata) {
+        this.nRow = 6;
+        this.nCol = 2;
+        this.labelLimit = this.nRow * this.nCol;
+        this.basedata = basedata;
+        this.filled = this.basedata.map((d, i) => ({
+            inner: d,
+            className: (i == this.basedata.length - 1)? "mark" : "unmark"
+        }));
+        this.fillRest();
+    }
+
+    fillRest(){
+        const rest = this.labelLimit - this.basedata.length % this.labelLimit;
+        const unit = this.basedata.length;
+        for (let i = 0; i < rest; i++) {
+            this.filled.push({
+                inner: this.basedata[i%unit],
+                className: (i % unit == unit - 1)? "mark" : "unmark"
+            });
         }
     }
-}
 
-function getLabelMarkup(data) {
-    return data.map(d => {
-        return `<p class="zipcode">〒${d.zipcode}</p>` +
-        `<div class="container">` +
-            `<div class="addressBlock">` +
-                `<p class="address">${d.address}</p>` +
-                `<p class="place">${d.place}</p>` +
-                `<p class="phone">${d.phone}</p>` +
-            `</div>` +
-            `<div class="nameBlock">` +
-                `<p class="name">${d.name}<span class="honorific">${d.honorific}</span></p>` +
-            `</div>` +
-        `</div>`;
-    });
-}
-
-function updateTable(markup) {
-    let labelIdx = 0;
-    const printTable = document.querySelectorAll(".print");
-    for (let i = 0; i < printTable.length; i++) {
-        const targetTable = printTable[i];
-        const cells = targetTable.querySelectorAll("td");
-        for (let c = 0; c < cells.length; c++) {
-            cells[c].innerHTML = markup[labelIdx];
-            labelIdx += 1;
-            if (labelIdx == markup.length) {
-                cells[c].style.borderBottomColor = "#ccc";
-                cells[c].style.borderRightColor = "#ccc";
-                labelIdx = 0;
+    allocate() {
+        const trs = [];
+        let cellStack = [];
+        for (let i = 0; i < this.filled.length; i++) {
+            const label = this.filled[i];
+            cellStack.push(label)
+            if (cellStack.length == this.nCol || i == this.filled.length - 1) {
+                trs.push(cellStack);
+                cellStack = [];
             }
         }
+        const sheets = [];
+        let rowStack = [];
+        for (let i = 0; i < trs.length; i++) {
+            const tr = trs[i];
+            rowStack.push(tr)
+            if (rowStack.length == this.nRow || i == trs.length - 1) {
+                sheets.push(rowStack);
+                rowStack = [];
+            }
+        }
+        return sheets;
     }
 }
 
-window.onload = function(){
-    const data = loadBaseData();
-
-    addSection(data);
-
-    const markup = getLabelMarkup(data);
-
-    updateTable(markup);
-
+const labelCell = {
+    props: ["label"],
+    template: `
+    <p class="zipcode">〒{{label.zipcode}}</p>
+    <div class="container">
+        <div class="addressBlock">
+            <p class="address">{{label.address}}</p>
+            <p class="place">{{label.place}}</p>
+            <p class="phone">{{label.phone}}</p>
+        </div>
+        <div class="nameBlock">
+            <p class="name">{{label.name}}<span class="honorific">{{label.honorific}}</span></p>
+        </div>
+    </div>
+    `
 }
+
+const labelRow = {
+    props: ["labels"],
+    components: {
+        "label-cell": labelCell
+    },
+    template: `
+    <tr>
+        <td v-for="(lb, idx) in labels" :key="idx" :class="lb.className">
+            <label-cell :label="lb.inner"></label-cell>
+        </td>
+    </tr>
+    `
+}
+
+const labelSheet = {
+    props: ["rows"],
+    components: {
+        "label-row": labelRow
+    },
+    template: `
+    <section class="sheet">
+        <table class="print">
+            <tbody contenteditable="true">
+                <label-row v-for="(r, idx) in rows" :key="idx" :labels="r">
+                </label-row>
+            </tbody>
+        </table>
+    </section>
+    `
+}
+
+const vm = Vue.createApp({
+    data: function() {
+        return {
+            basedata: loadBaseData(),
+        }
+    },
+    computed: {
+        sheetsData: function(){
+            const alloc = new Allocator(this.basedata);
+            return alloc.allocate();
+        }
+    },
+    components: {
+        "label-sheet": labelSheet
+    }
+}).mount("#app");
+
+
 </script>
 </body>
 </html>
