@@ -1,88 +1,95 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>print-page</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 style=%22dominant-baseline:central;text-anchor:middle;font-size:90px;%22>&#x2714;</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 style=%22dominant-baseline:central;text-anchor:middle;font-size:90px;%22>&#x2714;</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css">
     <link rel="stylesheet" type="text/css" href="./css/print.css">
-    <style>@page{ size: A4; size: portrait }</style>
+    <style>
+        @page {
+            size: A4;
+            size: portrait
+        }
+    </style>
 </head>
+
 <body class="A4">
     <div id="app">
         <sheets :sheets-arr="sheetsData"></sheets>
     </div>
-<script src="https://cdn.jsdelivr.net/npm/vue@3.2.37/dist/vue.global.js"></script>
-<script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.37/dist/vue.global.js"></script>
+    <script>
 
-function loadBaseData(){
-    const src = window.opener.document.querySelector('#table1 tbody');
-    return Array.from(src.rows).map(row => {
-        return {
-            name:      (row.cells[0].innerText.trim() || ""),
-            honorific: (row.cells[1].innerText.trim() || ""),
-            place:     (row.cells[2].innerText.trim() || ""),
-            zipcode:   (row.cells[3].innerText.trim() || ""),
-            address:   (row.cells[4].innerText.trim() || ""),
-            phone:     (row.cells[5].innerText.trim() || ""),
-        }
-    });
-}
-
-class Allocator {
-    constructor(basedata, nRow, nCol) {
-        this.nRow = nRow;
-        this.nCol = nCol;
-        this.labelLimit = this.nRow * this.nCol;
-        this.basedata = basedata;
-        this.labels = this.basedata.map((d, i) => ({
-            inner: d,
-            className: (i == this.basedata.length - 1)? "mark" : "unmark"
-        }));
-        this.fillRest();
-    }
-
-    fillRest(){
-        const exceed = this.basedata.length % this.labelLimit;
-        if (exceed < 1) {
-            return;
-        }
-        const rest = this.labelLimit - this.basedata.length % this.labelLimit;
-        const unit = this.basedata.length;
-        for (let i = 0; i < rest; i++) {
-            this.labels.push({
-                inner: this.basedata[i%unit],
-                className: (i % unit == unit - 1)? "mark" : "unmark"
+        function loadBaseData() {
+            const src = window.opener.document.querySelector('#table1 tbody');
+            return Array.from(src.rows).map(row => {
+                return {
+                    name: (row.cells[0].innerText.trim() || ""),
+                    honorific: (row.cells[1].innerText.trim() || ""),
+                    place: (row.cells[2].innerText.trim() || ""),
+                    zipcode: (row.cells[3].innerText.trim() || ""),
+                    address: (row.cells[4].innerText.trim() || ""),
+                    phone: (row.cells[5].innerText.trim() || ""),
+                }
             });
         }
-    }
 
-    allocate() {
-        const trs = [];
-        const cellStack = [];
-        for (let i = 0; i < this.labels.length; i++) {
-            const label = this.labels[i];
-            cellStack.push(label)
-            if (cellStack.length == this.nCol) {
-                trs.push({cells: cellStack.splice(0)}); // reset cellStack by splicing
+        class Allocator {
+            constructor(basedata) {
+                this.basedata = basedata;
+                this.labels = this.basedata.map((d, i) => ({
+                    inner: d,
+                    className: (i == this.basedata.length - 1) ? "mark" : "unmark"
+                }));
+            }
+
+            getFullData(labelLimit) {
+                const stack = this.labels;
+                const exceed = this.basedata.length % labelLimit;
+                if (exceed < 1) {
+                    return stack;
+                }
+                const rest = labelLimit - this.basedata.length % labelLimit;
+                const unit = this.basedata.length;
+                for (let i = 0; i < rest; i++) {
+                    stack.push({
+                        inner: this.basedata[i % unit],
+                        className: (i % unit == unit - 1) ? "mark" : "unmark"
+                    });
+                }
+                return stack;
+            }
+
+            allocate(nRow, nCol) {
+                const fullData = this.getFullData(nRow * nCol);
+                const trs = [];
+                const cellStack = [];
+                for (let i = 0; i < fullData.length; i++) {
+                    const label = fullData[i];
+                    cellStack.push(label)
+                    if (cellStack.length == nCol) {
+                        trs.push({ cells: cellStack.splice(0) }); // reset cellStack by splicing
+                    }
+                }
+                const sheets = [];
+                const rowStack = [];
+                for (let i = 0; i < trs.length; i++) {
+                    const tr = trs[i];
+                    rowStack.push(tr)
+                    if (rowStack.length == nRow) {
+                        sheets.push({ rows: rowStack.splice(0) }); // reset rowStack by splicing
+                    }
+                }
+                return sheets;
             }
         }
-        const sheets = [];
-        const rowStack = [];
-        for (let i = 0; i < trs.length; i++) {
-            const tr = trs[i];
-            rowStack.push(tr)
-            if (rowStack.length == this.nRow) {
-                sheets.push({rows: rowStack.splice(0)}); // reset rowStack by splicing
-            }
-        }
-        return sheets;
-    }
-}
 
-const labelCell = {
-    props: ["label"],
-    template: `
+        const labelCell = {
+            props: ["label"],
+            template: `
     <p class="zipcode">〒{{label.zipcode}}</p>
     <div class="container">
         <div class="addressBlock">
@@ -95,28 +102,28 @@ const labelCell = {
         </div>
     </div>
     `
-}
+        }
 
-const labelRow = {
-    props: ["cells"],
-    components: {
-        "label-cell": labelCell
-    },
-    template: `
+        const labelRow = {
+            props: ["cells"],
+            components: {
+                "label-cell": labelCell
+            },
+            template: `
     <tr>
         <td v-for="(cell, idx) in cells" :key="idx" :class="cell.className">
             <label-cell :label="cell.inner"></label-cell>
         </td>
     </tr>
     `
-}
+        }
 
-const labelSheet = {
-    props: ["rows"],
-    components: {
-        "label-row": labelRow
-    },
-    template: `
+        const labelSheet = {
+            props: ["rows"],
+            components: {
+                "label-row": labelRow
+            },
+            template: `
     <section class="sheet">
         <table class="print">
             <tbody contenteditable="true">
@@ -125,38 +132,39 @@ const labelSheet = {
         </table>
     </section>
     `
-}
+        }
 
-const sheets = {
-    props: ["sheets-arr"],
-    components: {
-        "label-sheet": labelSheet
-    },
-    template: `
+        const sheets = {
+            props: ["sheets-arr"],
+            components: {
+                "label-sheet": labelSheet
+            },
+            template: `
     <div v-for="(sht, idx) in sheetsArr" :key="idx">
         <label-sheet :rows="sht.rows"></label-sheet>
     </div>
     `
-}
-
-const vm = Vue.createApp({
-    data: function() {
-        return {
-            basedata: loadBaseData(),
         }
-    },
-    computed: {
-        sheetsData: function(){
-            const alloc = new Allocator(this.basedata, 6, 2);
-            return alloc.allocate();
-        }
-    },
-    components: {
-        "sheets": sheets
-    }
-}).mount("#app");
+
+        const vm = Vue.createApp({
+            data: function () {
+                return {
+                    basedata: loadBaseData(),
+                }
+            },
+            computed: {
+                sheetsData: function () {
+                    const alloc = new Allocator(this.basedata);
+                    return alloc.allocate(6, 2);
+                }
+            },
+            components: {
+                "sheets": sheets
+            }
+        }).mount("#app");
 
 
-</script>
+    </script>
 </body>
+
 </html>
