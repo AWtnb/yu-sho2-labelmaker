@@ -1,87 +1,87 @@
-@import url('https://cdn.jsdelivr.net/npm/yakuhanjp@3.4.1/dist/css/yakuhanjp_s-noto.min.css');
+@import url("https://cdn.jsdelivr.net/npm/yakuhanjp@3.4.1/dist/css/yakuhanjp_s-noto.min.css");
 @font-face {
-  font-family: 'Noto Sans JP';
+  font-family: "Noto Sans JP", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(https://fonts.gstatic.com/s/notosansjp/v42/-F62fjtqLzI2JPCgQBnw7HFowA.otf) format('opentype');
+  src: url(https://fonts.gstatic.com/s/notosansjp/v42/-F62fjtqLzI2JPCgQBnw7HFowA.otf) format("opentype");
 }
 
 .sheet {
-    /* https://stackoverflow.com/questions/13605179/firefox-print-top-alignment-is-not-good-in-2nd-page */
-    margin-top: 1px;
+  /* https://stackoverflow.com/questions/13605179/firefox-print-top-alignment-is-not-good-in-2nd-page */
+  margin-top: 1px;
 }
 
 table.print {
-    font-family: YakuHanJPs_Noto, 'Noto Sans JP', sans-serif;
-    position: absolute;
-    top: 23.5mm;
-    left: 7mm;
-    width: 196mm;
-    height: 266mm;
-    border-collapse: collapse;
-    display: block;
+  font-family: YakuHanJPs_Noto, "Noto Sans JP", "MS Gothic", sans-serif;
+  position: absolute;
+  top: 23.5mm;
+  left: 7mm;
+  width: 196mm;
+  height: 266mm;
+  border-collapse: collapse;
+  display: block;
 }
 
 table.print p {
-    margin: 0;
+  margin: 0;
 }
 
 table.print td {
-    border: none;
-    border-collapse: collapse;
-    position: relative;
-    width: 98mm;
-    height: 44mm;
-    white-space: pre-wrap;
+  border: none;
+  border-collapse: collapse;
+  position: relative;
+  width: 98mm;
+  height: 44mm;
+  white-space: pre-wrap;
 }
 
 p.zipcode {
-    position: absolute;
-    font-size: 14pt;
-    top: 5mm;
-    left: 5mm;
+  position: absolute;
+  font-size: 14pt;
+  top: 5mm;
+  left: 5mm;
 }
 
 .container {
-    position: absolute;
-    width: 90mm;
-    height: 25mm;
-    font-size: 12pt;
-    top: 12mm;
-    left: 5mm;
-    word-break:break-all;
+  position: absolute;
+  width: 90mm;
+  height: 25mm;
+  font-size: 12pt;
+  top: 12mm;
+  left: 5mm;
+  word-break: break-all;
 }
 
 .addressBlock {
-    line-height: 1.25;
+  line-height: 1.25;
 }
 
 .place:empty {
-    display: none;
+  display: none;
 }
 
 .phone {
-    font-size: 9pt;
+  font-size: 9pt;
 }
 
 .nameBlock {
-    position: absolute;
-    bottom: 2mm;
-    left: 0;
+  position: absolute;
+  bottom: 2mm;
+  left: 0;
 }
 
 .nameBlock .name {
-    font-size: 18pt;
-    line-height: 1.1;
+  font-size: 18pt;
+  line-height: 1.1;
 }
 
 .nameBlock .honorific {
-    font-size: 14pt;
-    margin-left: .5em;
+  font-size: 14pt;
+  margin-left: 0.5em;
 }
 
 .mark {
-    border-bottom: 1px gray dotted !important;
-    border-right: 1px gray dotted !important;
+  border-bottom: 1px gray dotted !important;
+  border-right: 1px gray dotted !important;
 }
