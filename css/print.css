@@ -12,7 +12,7 @@ table.print {
   font-weight: 400;
   font-style: normal;
   position: absolute;
-  top: 23.5mm;
+  top: 22mm;
   left: 7mm;
   width: 196mm;
   height: 266mm;
@@ -25,20 +25,20 @@ table.print p {
 }
 
 table.print td {
-  border-width: 1px;
-  border-color: transparent;
   border-collapse: collapse;
   position: relative;
-  width: 98mm;
-  height: 44mm;
+  width: 100mm;
+  height: 45mm;
   white-space: pre-wrap;
 }
 
-table.print td.mark {
-  border-bottom-color: gray;
-  border-bottom-style: dotted;
-  border-right-color: gray;
-  border-right-style: dotted;
+table.print td.mark::after {
+  content: "\25e2";
+  font-size: 3mm;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #e0e0e0;
 }
 
 p.zipcode {
