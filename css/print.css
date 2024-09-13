@@ -1,11 +1,5 @@
-@import url("https://cdn.jsdelivr.net/npm/yakuhanjp@3.4.1/dist/css/yakuhanjp_s-noto.min.css");
-@font-face {
-  font-family: "Noto Sans JP", sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(https://fonts.gstatic.com/s/notosansjp/v42/-F62fjtqLzI2JPCgQBnw7HFowA.otf) format("opentype");
-}
+@import url("https://cdn.jsdelivr.net/npm/yakuhanjp@4.1.1/dist/css/yakuhanjp_s.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap");
 
 .sheet {
   /* https://stackoverflow.com/questions/13605179/firefox-print-top-alignment-is-not-good-in-2nd-page */
@@ -13,7 +7,10 @@
 }
 
 table.print {
-  font-family: YakuHanJPs_Noto, "Noto Sans JP", "MS Gothic", sans-serif;
+  font-family: YakuHanJPs, "Noto Sans JP", "MS Gothic", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
   position: absolute;
   top: 23.5mm;
   left: 7mm;
@@ -28,12 +25,20 @@ table.print p {
 }
 
 table.print td {
-  border: none;
+  border-width: 1px;
+  border-color: transparent;
   border-collapse: collapse;
   position: relative;
   width: 98mm;
   height: 44mm;
   white-space: pre-wrap;
+}
+
+table.print td.mark {
+  border-bottom-color: gray;
+  border-bottom-style: dotted;
+  border-right-color: gray;
+  border-right-style: dotted;
 }
 
 p.zipcode {
@@ -79,9 +84,4 @@ p.zipcode {
 .nameBlock .honorific {
   font-size: 14pt;
   margin-left: 0.5em;
-}
-
-.mark {
-  border-bottom: 1px gray dotted !important;
-  border-right: 1px gray dotted !important;
 }

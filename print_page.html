@@ -111,7 +111,7 @@
             },
             template: `
     <tr>
-        <td v-for="(cell, idx) in cells" :key="idx" :class="cell.className">
+        <td v-for="(cell, idx) in cells" :key="idx" :class="cell.className" contenteditable="true">
             <label-cell :label="cell.inner"></label-cell>
         </td>
     </tr>
@@ -126,7 +126,7 @@
             template: `
     <section class="sheet">
         <table class="print">
-            <tbody contenteditable="true">
+            <tbody>
                 <label-row v-for="(r, idx) in rows" :key="idx" :cells="r.cells"></label-row>
             </tbody>
         </table>
